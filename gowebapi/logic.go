@@ -26,16 +26,30 @@ func GetTheSSHResult(w http.ResponseWriter, r *http.Request) {
 	}
 	var stdout, stderr bytes.Buffer
 	var sstdout, sstderr bytes.Buffer
+	var astdout, astderr bytes.Buffer
 	tt := target[0]
 	filename := "/tmp/" + tt + ".json"
-	cmdd := exec.Command("/app/bin/ssh_scan", "-t", tt, "-o", filename)
+
+	fmt.Println("here0")
+	acmd := exec.Command("pwd")
+	acmd.Stdout = &astdout
+	acmd.Stderr = &astderr
+	aerr := acmd.Run()
+	if aerr != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", aerr)
+	}
+	ooutStr, _ := string(astdout.Bytes()), string(astderr.Bytes())
+	fmt.Println(ooutStr)
+
+	fmt.Println("here1")
+	cmdd := exec.Command("./bin/ssh_scan", "-t", tt, "-o", filename)
 	cmdd.Stdout = &sstdout
 	cmdd.Stderr = &sstderr
 	errr := cmdd.Run()
 	if errr != nil {
 		log.Fatalf("cmd.Run() failed with %s\n", errr)
 	}
-
+	fmt.Println("here2")
 	cmd := exec.Command("cat", filename)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
