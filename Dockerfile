@@ -15,5 +15,6 @@ RUN apk --update add --virtual build-dependencies build-base && \
     bundle install && \
     apk del build-dependencies build-base && \
     rm -rf /var/cache/apk/*
-
-CMD /app/bin/ssh_scan
+EXPOSE 13337
+# CMD /app/bin/ssh_scan
+ENTRYPOINT ["/app/gosshscan"]
