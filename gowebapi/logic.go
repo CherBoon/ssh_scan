@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"log"
+	"net"
 	"net/http"
 	"os/exec"
 )
@@ -28,6 +29,14 @@ func GetTheSSHResult(w http.ResponseWriter, r *http.Request) {
 	var sstdout, sstderr bytes.Buffer
 	var astdout, astderr bytes.Buffer
 	tt := target[0]
+	addr := net.ParseIP(target[0])
+	if addr == nil {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(("Not valid IP Address"))
+		return
+	} else {
+		tt = target[0]
+	}
 	filename := "/tmp/" + tt + ".json"
 
 	fmt.Println("here0")
