@@ -11,6 +11,7 @@ import (
 	"os/exec"
 )
 
+// CGO_ENABLED=0 go build main.go logic.go
 func GetTheSSHResult(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Query()["target"] == nil {
 		w.Header().Set("Content-Type", "application/json")
